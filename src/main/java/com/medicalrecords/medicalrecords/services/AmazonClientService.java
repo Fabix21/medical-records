@@ -45,7 +45,7 @@ public class AmazonClientService {
 
     @PostConstruct
     private void initializeAmazon() {
-        AWSCredentials credentials = new BasicAWSCredentials(this.accessKeyId,this.secretKey);
+        AWSCredentials credentials = new BasicAWSCredentials(accessKeyId,secretKey);
         this.s3client = AmazonS3ClientBuilder
                 .standard()
                 .withRegion(region)
@@ -54,19 +54,11 @@ public class AmazonClientService {
     }
 
     public String uploadFile( MultipartFile multipartFile ) throws IOException {
-
         File file = convertMultiPartToFile(multipartFile);
         String fileName = generateFileName(multipartFile);
-        String fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
         uploadFileTos3bucket(fileName,file);
-        file.deleteOnExit();
-        return fileUrl;
-    }
-
-    public String deleteFileFromS3Bucket( String fileUrl ) {
-        String fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
-        s3client.deleteObject(bucketName,fileName);
-        return "Successfully deleted";
+        file.delete();
+        return fileName;
     }
 
     private void uploadFileTos3bucket( String fileName,File file ) {
@@ -98,6 +90,12 @@ public class AmazonClientService {
             logger.info("IO Error Message= {}",ex.getMessage());
         }
         return content;
+    }
+
+    public String deleteFileFromS3Bucket( String fileUrl ) {
+        String fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+        s3client.deleteObject(bucketName,fileName);
+        return "Successfully deleted";
     }
 
 }

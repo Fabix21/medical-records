@@ -33,6 +33,8 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
         http.httpBasic().and().csrf().disable().cors().disable().authorizeRequests()
             .antMatchers("/addUser*").permitAll()
             .antMatchers("/uploadFile*").permitAll()
+            .antMatchers("/getDocuments*").permitAll()
+            .antMatchers("/getDocuments/**").permitAll()
             .anyRequest().authenticated().and().headers().frameOptions().sameOrigin();
 
     }

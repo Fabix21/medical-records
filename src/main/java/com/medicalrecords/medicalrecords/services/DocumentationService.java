@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentationService {
@@ -27,15 +29,21 @@ public class DocumentationService {
 
     @Transactional
     public String saveDocument( MultipartFile file,String login ) throws Exception {
-        User user = userService.getUser(login);
-        String fileName = amazonClientService.generateFileName(file);
+        final User user = userService.getUser(login);
+        final String fileName = amazonClientService.uploadFile(file);
         final Documentation documentation = Documentation.builder()
                                                          .user(user)
                                                          .timestamp(new Timestamp(System.currentTimeMillis()))
                                                          .s3path(fileName).build();
-
-        amazonClientService.uploadFile(file);
         documentationRepository.save(documentation);
         return "Document: " + fileName + " for user " + login + " has been saved!";
+    }
+
+    public List<String> getAllDocuments( String login ) {
+        final User user = userService.getUser(login);
+        final List<Documentation> medicalDocumentations = user.getMedicalDocumentations();
+        return medicalDocumentations.stream()
+                                    .map(Documentation::getS3path)
+                                    .collect(Collectors.toList());
     }
 }
