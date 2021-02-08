@@ -1,6 +1,6 @@
 package com.medicalrecords.medicalrecords.security;
 
-import com.medicalrecords.medicalrecords.entities.User;
+import com.medicalrecords.medicalrecords.entities.Patient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,27 +8,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class UserPrincipal implements UserDetails {
+public class PatientPrincipal implements UserDetails {
 
-    private final User user;
+    private final Patient patient;
 
-    public UserPrincipal(User user) {
-        this.user = user;
+    public PatientPrincipal( Patient patient ) {
+        this.patient = patient;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USR"));
+        return List.of(new SimpleGrantedAuthority("ROLE_PAC"));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return patient.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getLogin();
+        return patient.getLogin();
     }
 
     @Override

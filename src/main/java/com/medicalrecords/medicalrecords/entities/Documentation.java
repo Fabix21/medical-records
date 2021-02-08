@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 public class Documentation {
 
     @ManyToOne
-    private User user;
+    private Patient patient;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +29,10 @@ public class Documentation {
 
     @NotNull
     private Timestamp timestamp;
+
+    @NotBlank
+    private String documentName;
+
+    @NotBlank
+    private String issuedBy;
 }

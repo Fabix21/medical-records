@@ -1,7 +1,7 @@
 package com.medicalrecords.medicalrecords.services;
 
 import com.medicalrecords.medicalrecords.entities.Documentation;
-import com.medicalrecords.medicalrecords.entities.User;
+import com.medicalrecords.medicalrecords.entities.Patient;
 import com.medicalrecords.medicalrecords.repositories.DocumentationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,40 +10,41 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DocumentationService {
 
     private final AmazonClientService amazonClientService;
-    private final UserService userService;
     private final DocumentationRepository documentationRepository;
+    private final DoctorService doctorService;
+    private final PatientService patientService;
 
     @Autowired
-    public DocumentationService( final AmazonClientService amazonClientService,final UserService userService,
-                                 final DocumentationRepository documentationRepository ) {
+    public DocumentationService( final AmazonClientService amazonClientService,
+                                 final DocumentationRepository documentationRepository,
+                                 final DoctorService doctorService,final PatientService patientService ) {
         this.amazonClientService = amazonClientService;
-        this.userService = userService;
         this.documentationRepository = documentationRepository;
+        this.doctorService = doctorService;
+        this.patientService = patientService;
     }
 
     @Transactional
-    public String saveDocument( MultipartFile file,String login ) throws Exception {
-        final User user = userService.getUser(login);
+    public void saveDocument( MultipartFile file,String login,String issuedBy ) throws Exception {
+        final Patient patient = patientService.getPatient(login);
         final String fileName = amazonClientService.uploadFile(file);
         final Documentation documentation = Documentation.builder()
-                                                         .user(user)
+                                                         .patient(patient)
                                                          .timestamp(new Timestamp(System.currentTimeMillis()))
+                                                         .issuedBy(doctorService.getDoctorTitle(issuedBy))
+                                                         .documentName(file.getOriginalFilename())
                                                          .s3path(fileName).build();
         documentationRepository.save(documentation);
-        return "Document: " + fileName + " for user " + login + " has been saved!";
+        //return "Document: " + fileName + " for user " + login + " has been saved!";
     }
 
-    public List<String> getAllDocuments( String login ) {
-        final User user = userService.getUser(login);
-        final List<Documentation> medicalDocumentations = user.getMedicalDocumentations();
-        return medicalDocumentations.stream()
-                                    .map(Documentation::getS3path)
-                                    .collect(Collectors.toList());
+    public List<Documentation> getAllDocuments( String login ) {
+        final Patient patient = patientService.getPatient(login);
+        return patient.getMedicalDocumentations();
     }
 }

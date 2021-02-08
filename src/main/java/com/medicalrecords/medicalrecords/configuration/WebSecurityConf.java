@@ -1,6 +1,7 @@
 package com.medicalrecords.medicalrecords.configuration;
 
-import com.medicalrecords.medicalrecords.services.UserService;
+import com.medicalrecords.medicalrecords.services.DoctorService;
+import com.medicalrecords.medicalrecords.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserService userService;
+    private DoctorService doctorService;
+
+    @Autowired
+    private PatientService patientService;
+
     @Bean
     public PasswordEncoder encoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -25,18 +30,27 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
-        auth.userDetailsService(userService);
+        auth.userDetailsService(doctorService);
+        auth.userDetailsService(patientService);
     }
 
     @Override
     protected void configure( HttpSecurity http ) throws Exception {
         http.httpBasic().and().csrf().disable().cors().disable().authorizeRequests()
+            .antMatchers("/","/home","/js/**","/css/**").permitAll()
             .antMatchers("/addUser*").permitAll()
             .antMatchers("/uploadFile*").permitAll()
             .antMatchers("/getDocuments*").permitAll()
             .antMatchers("/getDocuments/**").permitAll()
-            .anyRequest().authenticated().and().headers().frameOptions().sameOrigin();
-
+            .antMatchers("/showUsers").permitAll()
+            .antMatchers("/page*").permitAll()
+            .antMatchers("/page/**").permitAll()
+            .antMatchers("/addDoctor*").permitAll()
+            .antMatchers("/addPatient*").permitAll()
+            .antMatchers("/addDoc*").permitAll()
+            .antMatchers("/patients*").permitAll()
+            .anyRequest().authenticated().and().formLogin()
+            .and().headers().frameOptions().sameOrigin();
     }
 }
 

@@ -3,19 +3,19 @@ package com.medicalrecords.medicalrecords.entities;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.sql.Date;
-import java.util.List;
+import java.util.Date;
 
 
 @Data
 @Entity
-public class User {
-    @OneToMany(mappedBy = "user")
-    List<Documentation> medicalDocumentations;
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,13 +41,9 @@ public class User {
     @NotBlank
     private String pesel;
 
-    @NotBlank
-    private String nfzID;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
 
-    @NotBlank
     private String role;
 
     public String setPassword( String password ) {
