@@ -4,10 +4,11 @@ import com.medicalrecords.medicalrecords.entities.Documentation;
 import com.medicalrecords.medicalrecords.entities.Patient;
 import com.medicalrecords.medicalrecords.repositories.DocumentationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class DocumentationService {
         this.patientService = patientService;
     }
 
-    @Transactional
+    @CacheEvict(value = "getAllDocuments", allEntries = true)
     public void saveDocument( MultipartFile file,String login,String issuedBy ) throws Exception {
         final Patient patient = patientService.getPatient(login);
         final String fileName = amazonClientService.uploadFile(file);
@@ -40,9 +41,9 @@ public class DocumentationService {
                                                          .documentName(file.getOriginalFilename())
                                                          .s3path(fileName).build();
         documentationRepository.save(documentation);
-        //return "Document: " + fileName + " for user " + login + " has been saved!";
     }
 
+    @Cacheable(value = "getAllDocuments")
     public List<Documentation> getAllDocuments( String login ) {
         final Patient patient = patientService.getPatient(login);
         return patient.getMedicalDocumentations();

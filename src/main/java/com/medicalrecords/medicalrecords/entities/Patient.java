@@ -2,10 +2,16 @@ package com.medicalrecords.medicalrecords.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -13,16 +19,30 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Patient extends User {
 
-   private static final String ROLE = "PAT";
+    @NotBlank
+    @Size(max = 20)
+    private String name;
 
-   // @ManyToMany
-   //private Set<Doctor> doctors;
+    @Email
+    @Size(max = 30)
+    private String email;
 
-   @OneToMany(mappedBy = "patient")
-   private List<Documentation> medicalDocumentations;
+    @NotBlank
+    @Size(max = 20)
+    private String surname;
 
-   @NotBlank
-   private String nfzID;
+    @Size(max = 11)
+    private String pesel;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past
+    private LocalDate dateOfBirth;
+
+    @OneToMany(mappedBy = "patient", fetch = FetchType.LAZY)
+    private List<Documentation> medicalDocumentations;
+
+    @NotBlank
+    private String nfzID;
 
 
 }

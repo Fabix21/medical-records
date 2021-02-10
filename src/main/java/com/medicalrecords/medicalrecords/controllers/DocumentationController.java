@@ -1,12 +1,14 @@
 package com.medicalrecords.medicalrecords.controllers;
 
+import com.medicalrecords.medicalrecords.entities.Doctor;
 import com.medicalrecords.medicalrecords.entities.Documentation;
-import com.medicalrecords.medicalrecords.security.DoctorPrincipal;
-import com.medicalrecords.medicalrecords.security.PatientPrincipal;
+import com.medicalrecords.medicalrecords.security.UserPrincipal;
 import com.medicalrecords.medicalrecords.services.DocumentationService;
-import com.medicalrecords.medicalrecords.services.PatientService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,38 +19,38 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+
 @Controller
 public class DocumentationController {
 
+    private static final Logger logger = LoggerFactory.getLogger(DocumentationController.class);
+
+    private final DocumentationService documentationService;
 
     @Autowired
-    DocumentationService documentationService;
-    @Autowired
-    PatientService patientService;
+    public DocumentationController( final DocumentationService documentationService ) {
+        this.documentationService = documentationService;
+    }
 
-    /*
-    @GetMapping("/addDoc")
-    public String addDoc (Model model) {
-        List<String> users =  patientService.getAllPatients;
-        model.addAttribute("usersLogin", users);
-        return "addDoc";
-    }*/
     @PostMapping("/upload")
     public String newDocument( @RequestParam("selectedUser") final String selectedUser,
                                @RequestParam("file") final MultipartFile docFile,
-                               @AuthenticationPrincipal DoctorPrincipal issuedBy,
-                               //@RequestParam("currentPage") final String currentPage,
-                               RedirectAttributes attributes ) throws Exception {
-
+                               @AuthenticationPrincipal final UserPrincipal<Doctor> issuedBy,
+                               final RedirectAttributes attributes ) throws Exception {
+        String doctorUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         documentationService.saveDocument(docFile,selectedUser,issuedBy.getUsername());
+        logger.info("Doctor in session: {}",doctorUsername);
         attributes.addFlashAttribute("message","Pomyślnie dodano dokumentacje");
-
-        return "redirect:patients/1/5";
+        return "redirect:patients";
     }
 
     @GetMapping("/checkDoc")
-    public String checkDocumentation( @AuthenticationPrincipal PatientPrincipal patient,Model model ) {
-        List<Documentation> documentsNames = documentationService.getAllDocuments(patient.getUsername());
+    public String checkDocumentation( Model model ) {
+        String patientUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        String context = SecurityContextHolder.getContextHolderStrategy().toString();
+        logger.info("Patient in session: {}",patientUsername);
+        logger.info("Context: {}",context);
+        List<Documentation> documentsNames = documentationService.getAllDocuments(patientUsername);
         model.addAttribute("documentations",documentsNames);
         return "checkDoc";
     }

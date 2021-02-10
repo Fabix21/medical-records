@@ -2,23 +2,44 @@ package com.medicalrecords.medicalrecords.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
 public class Doctor extends User {
 
-    private static final String ROLE = "DOC";
+    @NotBlank
+    @Size(max = 20)
+    private String name;
 
-    //@ManyToMany
-    // private Set<Patient> patients = new HashSet<>();
+    @Email
+    @Size(max = 30)
+    private String email;
+
+    @NotBlank
+    @Size(max = 20)
+    private String surname;
+
+    @Size(max = 11)
+    private String pesel;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past
+    private LocalDate dateOfBirth;
 
     @NotBlank
     private String licenceNumber;
 
-    // @ElementCollection
-    //private List<String> medSpecialization ;
+    @ElementCollection
+    private List<String> medSpecialization;
 }

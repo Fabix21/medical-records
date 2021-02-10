@@ -8,45 +8,12 @@
     <!-- Material Design Bootstrap -->
     <link href="/css/mdb.min.css" rel="stylesheet">
 </head>
-<style>
-    .card {
-        min-height: 75vh;
-    }
-
-    .md-form {
-        margin-top: 8px !important;
-    }
-
-    .has-error label {
-        color: #ff3547 !important;
-    }
-
-    .has-error input.form-control {
-        border-bottom-color: #ff3547 !important;
-    }
-
-    .help-block {
-        margin-bottom: 0;
-    }
-
-    .has-error .messages {
-    }
-
-    .select-wrapper + label {
-
-        transform: translateY(-14px);
-    }
-
-    .select-wrapper + label.active {
-        transform: translateY(-28px);
-        left: 0;
-    }</style>
 <body>
 <!--Navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark primary-color">
 
     <!-- Navbar brand -->
-    <a class="navbar-brand" href="#">Dokumentacja Medyczna</a>
+    <a class="navbar-brand" href="#">Panel Administratora</a>
 
     <!-- Collapse button -->
     <button aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
@@ -55,24 +22,9 @@
     </button>
 
     <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="basicExampleNav">
+    <div class="collapse navbar-collapse">
 
         <!-- Links -->
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" th:href="@{/patients}">Pacjenci
-                    <span class="sr-only">(current)</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/addPatient/}">Dodaj Pacjenta
-                    <span class="sr-only">(current)</span>
-                </a>
-            </li>
-
-        </ul>
-        <!-- Links -->
-
         <form class="form-inline">
             <div class="md-form my-0">
                 <a class="btn btn-danger" data-mdb-ripple-color="dark" th:href="@{/logout}" type="button">
@@ -87,8 +39,9 @@
 <!--/.Navbar-->
 
 <div class="card mx-5 my-5 px-5 pt-5">
-    <h1>Dodaj Pacjenta</h1>
-    <form class="form-horizontal" id="main" method="post" th:action="@{/newPatient}" th:object="${patient}">
+    <h1>Dodaj Lekarza</h1>
+    <p class="alert alert-primary" th:if="${message ne null}" th:text="${message}"></p>
+    <form class="form-horizontal" id="main" method="post" th:action="@{/newDoctor}" th:object="${doctor}">
         <div class="form-group row mb-0">
             <div class="col-12 md-form px-0 mb-0">
                 <input class="form-control" name="login" th:field="*{login}" type="text">
@@ -138,8 +91,9 @@
         </div>
         <div class="form-group row mb-0">
             <div class="col-12 md-form px-0 mb-0">
-                <input class="form-control" id="nfzid" name="nfzid" th:field="*{nfzID}" type="text">
-                <label class="control-label" for="nfzid">nfzID</label>
+                <input class="form-control" id="licenceNumber" name="licenceNumber" th:field="*{licenceNumber}"
+                       type="text">
+                <label class="control-label" for="licenceNumber">Numer licencji lekarskiej</label>
             </div>
             <div class="col-12 messages"></div>
         </div>

@@ -13,7 +13,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark primary-color">
 
     <!-- Navbar brand -->
-    <a class="navbar-brand" href="#">Dokumentacja Medyczna</a>
+    <a class="navbar-brand" th:href="@{/index}">Dokumentacja Medyczna</a>
 
     <!-- Collapse button -->
     <button aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
@@ -22,12 +22,12 @@
     </button>
 
     <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="basicExampleNav">
+    <div class="collapse navbar-collapse">
 
         <!-- Links -->
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" th:href="@{/patients/1/1}">Pacjenci
+                <a class="nav-link" th:href="@{/patients/}">Pacjenci
                     <span class="sr-only">(current)</span>
                 </a>
             </li>

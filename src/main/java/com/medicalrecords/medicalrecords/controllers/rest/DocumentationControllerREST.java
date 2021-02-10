@@ -4,7 +4,6 @@ import com.medicalrecords.medicalrecords.services.AmazonClientService;
 import com.medicalrecords.medicalrecords.services.DocumentationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,7 @@ public class DocumentationControllerREST {
     private final AmazonClientService amazonClientService;
 
     @Autowired
-    public DocumentationControllerREST( final DocumentationService documentationService,AmazonClientService amazonClientService ) {
+    public DocumentationControllerREST( final DocumentationService documentationService,final AmazonClientService amazonClientService ) {
         this.documentationService = documentationService;
         this.amazonClientService = amazonClientService;
     }
@@ -38,7 +37,11 @@ public class DocumentationControllerREST {
     public ResponseEntity<byte[]> getFile( @PathVariable String docName ) {
         byte[] bytes = amazonClientService.downloadFile(docName);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        return new ResponseEntity<>(bytes,headers,HttpStatus.OK);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION,"inline;filename=" + docName);
+
+        return ResponseEntity.ok()
+                             .headers(headers)
+                             .contentLength(bytes.length)
+                             .contentType(MediaType.parseMediaType("application/pdf")).body(bytes);
     }
 }

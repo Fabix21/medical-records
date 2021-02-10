@@ -3,7 +3,8 @@ package com.medicalrecords.medicalrecords.services;
 import com.medicalrecords.medicalrecords.entities.Doctor;
 import com.medicalrecords.medicalrecords.exceptions.UsernameTakenException;
 import com.medicalrecords.medicalrecords.repositories.DoctorRepository;
-import com.medicalrecords.medicalrecords.security.DoctorPrincipal;
+import com.medicalrecords.medicalrecords.security.Role;
+import com.medicalrecords.medicalrecords.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,11 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class DoctorService extends UserService implements UserDetailsService {
 
-    @Autowired
-    DoctorRepository doctorRepository;
+    private final DoctorRepository doctorRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    public DoctorService( DoctorRepository doctorRepository,PasswordEncoder passwordEncoder ) {
+        this.doctorRepository = doctorRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void save( Doctor doctor ) {
         boolean isPresent = doctorRepository.existsByLogin(doctor.getLogin());
@@ -28,6 +32,7 @@ public class DoctorService extends UserService implements UserDetailsService {
         }
         final String password = doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
         doctor.setPassword(password);
+        doctor.setRole(Role.DOCTOR);
         doctorRepository.save(doctor);
     }
 
@@ -40,13 +45,14 @@ public class DoctorService extends UserService implements UserDetailsService {
         return "Dr. " + doctor.getName() + " " + doctor.getSurname();
     }
 
+
     public Doctor getDoctor( String doctorName ) {
         return getUser(doctorName,doctorRepository);
     }
 
     @Override
     public UserDetails loadUserByUsername( String username ) throws UsernameNotFoundException {
-        return new DoctorPrincipal(doctorRepository.findByLogin(username)
-                                                   .orElseThrow(() -> new UsernameNotFoundException("User does not exist!")));
+        return new UserPrincipal<>(doctorRepository.findByLogin(username)
+                                                   .orElseThrow(() -> new UsernameNotFoundException("Doctor does not exist!")));
     }
 }

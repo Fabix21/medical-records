@@ -1,17 +1,14 @@
 package com.medicalrecords.medicalrecords.entities;
 
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Date;
-
 
 @Data
 @Entity
@@ -25,25 +22,11 @@ public abstract class User {
     @Size(max = 20)
     private String login;
 
-    @Email
-    @Size(max = 20)
-    private String email;
-
     @NotBlank
-    private String name;
-
-    @NotBlank
+    @Size(min = 5)
     private String password;
 
-    @NotBlank
-    private String surname;
-
-    @NotBlank
-    private String pesel;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfBirth;
-
+    @Length(max = 3)
     private String role;
 
     public String setPassword( String password ) {
