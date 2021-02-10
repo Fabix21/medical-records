@@ -1,10 +1,10 @@
 package com.medicalrecords.medicalrecords.services;
 
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
@@ -43,11 +43,10 @@ public class AmazonClientService {
     @PostConstruct
     private void initializeAmazon() {
         AWSCredentials credentials = new BasicAWSCredentials(accessKeyId,secretKey);
-        this.s3client = AmazonS3ClientBuilder
-                .standard()
-                .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .build();
+        s3client = new AmazonS3Client(credentials);
+        s3client.setEndpoint("http://localhost:8000");
+        s3client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
+        s3client.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).build());
     }
 
     public String uploadFile( MultipartFile multipartFile ) throws IOException {

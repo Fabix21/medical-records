@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-
 @Configuration
 public class AdminConf extends UserService implements UserDetailsService {
 
