@@ -37,14 +37,14 @@ public class AmazonClientService {
     @Value("${s3.secretKey}")
     private String secretKey;
 
-    @Value("${s3.region}")
-    private String region;
+    @Value("${s3.endpointUrl}")
+    private String endpoint;
 
     @PostConstruct
     private void initializeAmazon() {
         AWSCredentials credentials = new BasicAWSCredentials(accessKeyId,secretKey);
         s3client = new AmazonS3Client(credentials);
-        s3client.setEndpoint("http://localhost:8000");
+        s3client.setEndpoint(endpoint);
         s3client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
         s3client.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).build());
     }

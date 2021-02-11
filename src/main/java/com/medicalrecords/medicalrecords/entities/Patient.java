@@ -1,7 +1,6 @@
 package com.medicalrecords.medicalrecords.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper = true)
 public class Patient extends User {
 
     @NotBlank

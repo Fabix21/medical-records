@@ -1,11 +1,12 @@
 package com.medicalrecords.medicalrecords.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
@@ -15,8 +16,10 @@ import java.util.List;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper = true)
 public class Doctor extends User {
+
+    @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
+    private List<Documentation> documentations;
 
     @NotBlank
     @Size(max = 20)
