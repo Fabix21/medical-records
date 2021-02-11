@@ -1,4 +1,4 @@
-package com.medicalrecords.medicalrecords.controllers;
+package com.medicalrecords.medicalrecords.controllers.thymeleaf;
 
 import com.medicalrecords.medicalrecords.entities.Doctor;
 import com.medicalrecords.medicalrecords.entities.Documentation;

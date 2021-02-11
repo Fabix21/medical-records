@@ -36,22 +36,12 @@ public class DoctorService extends UserService implements UserDetailsService {
         doctorRepository.save(doctor);
     }
 
-
-    public String getDoctorTitle( String issuedBy ) {
-        return getDoctorName(getDoctor(issuedBy));
-    }
-
-    private String getDoctorName( Doctor doctor ) {
-        return "Dr. " + doctor.getName() + " " + doctor.getSurname();
-    }
-
-
     public Doctor getDoctor( String doctorName ) {
         return getUser(doctorName,doctorRepository);
     }
 
     @Override
-    public UserDetails loadUserByUsername( String username ) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername( String username ) {
         return new UserPrincipal<>(doctorRepository.findByLogin(username)
                                                    .orElseThrow(() -> new UsernameNotFoundException("Doctor does not exist!")));
     }

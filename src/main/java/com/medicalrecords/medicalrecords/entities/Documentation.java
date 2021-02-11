@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -25,7 +24,7 @@ public class Documentation {
     @JoinTable(name = "documentation_tag",
             joinColumns = @JoinColumn(name = "documentation_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags = new HashSet<>();
+    private Set<Tag> tags;
 
     @ManyToOne
     private Patient patient;

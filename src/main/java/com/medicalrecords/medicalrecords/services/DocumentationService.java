@@ -24,6 +24,7 @@ public class DocumentationService {
     private final DoctorService doctorService;
     private final PatientService patientService;
 
+
     @Autowired
     public DocumentationService( final AmazonClientService amazonClientService,
                                  final DocumentationRepository documentationRepository,
@@ -34,7 +35,7 @@ public class DocumentationService {
         this.patientService = patientService;
     }
 
-    @CacheEvict(value = "getAllDocuments", allEntries = true)
+    @CacheEvict(cacheNames = {"getAllDocuments","getAllDocuments","getDocumentsByDate"}, allEntries = true)
     public void saveDocument( MultipartFile file,
                               final String login,
                               final String issuedBy,
@@ -42,8 +43,6 @@ public class DocumentationService {
         final Patient patient = patientService.getPatient(login);
         final String fileName = amazonClientService.uploadFile(file);
         final Doctor doctor = doctorService.getDoctor(issuedBy);
-
-
         final Documentation documentation = Documentation.builder()
                                                          .patient(patient)
                                                          .date(LocalDate.now())
@@ -51,7 +50,6 @@ public class DocumentationService {
                                                          .tags(tags)
                                                          .documentName(file.getOriginalFilename())
                                                          .s3path(fileName).build();
-
         tags.forEach(tag -> {
             tag.setDocumentations(new HashSet<>());
             tag.getDocumentations().add(documentation);
@@ -76,4 +74,5 @@ public class DocumentationService {
     public List<Documentation> getDocumentsByDate( LocalDate from,LocalDate to ) {
         return documentationRepository.findByDateBetween(from,to);
     }
+
 }

@@ -4,6 +4,7 @@ import com.medicalrecords.medicalrecords.dto.DocumentDTO;
 import com.medicalrecords.medicalrecords.entities.Tag;
 import com.medicalrecords.medicalrecords.services.AmazonClientService;
 import com.medicalrecords.medicalrecords.services.DocumentationService;
+import com.medicalrecords.medicalrecords.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -21,11 +22,14 @@ import java.util.stream.Collectors;
 @RestController
 public class DocumentationControllerREST {
     private final DocumentationService documentationService;
+    private final TagService tagService;
     private final AmazonClientService amazonClientService;
 
     @Autowired
-    public DocumentationControllerREST( final DocumentationService documentationService,final AmazonClientService amazonClientService ) {
+    public DocumentationControllerREST( final DocumentationService documentationService,
+                                        final TagService tagService,AmazonClientService amazonClientService ) {
         this.documentationService = documentationService;
+        this.tagService = tagService;
         this.amazonClientService = amazonClientService;
     }
 
@@ -71,14 +75,15 @@ public class DocumentationControllerREST {
         return documentationService.getDocumentsByDate(from,to).stream()
                                    .map(DocumentDTO::new)
                                    .collect(Collectors.toList());
-    }/*
+    }
+
     @GetMapping("/getDocuments/tag")
-    public Set<DocumentDTO> getDocumentationByTag( @RequestParam("tag") String tag) {
-        DocumentDTO documentDTO = new DocumentDTO();
-        return documentationService.getDocumentsByTags(tag).stream()
-                                                      .map(documentDTO::getDto)
-                                                      .collect(Collectors.toSet());
-    }*/
+    public Set<DocumentDTO> getDocumentationByTag( @RequestParam("tag") String tag ) {
+        return tagService.getDocumentsByTag(tag)
+                         .stream()
+                         .map(DocumentDTO::new)
+                         .collect(Collectors.toSet());
+    }
 
     @GetMapping("/getDocuments/{docName}")
     public ResponseEntity<byte[]> getFile( @PathVariable String docName ) {
