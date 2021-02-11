@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,12 +33,11 @@ public class Documentation {
     @ManyToOne
     private Doctor doctor;
 
-
     @NotBlank
     private String s3path;
 
     @NotNull
-    private Timestamp timestamp;
+    private LocalDate date;
 
     @NotBlank
     private String documentName;

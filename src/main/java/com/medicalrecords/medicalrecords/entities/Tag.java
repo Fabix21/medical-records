@@ -1,15 +1,16 @@
 package com.medicalrecords.medicalrecords.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Tag {
 
     @Id
@@ -17,7 +18,7 @@ public class Tag {
     private Long id;
 
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Documentation> documentations = new HashSet<>();
+    private Set<Documentation> documentations;
 
     private String tagName;
 
