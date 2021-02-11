@@ -1,7 +1,7 @@
 package com.medicalrecords.medicalrecords.controllers.rest;
 
+import com.medicalrecords.medicalrecords.dto.DocumentDTO;
 import com.medicalrecords.medicalrecords.entities.Tag;
-import com.medicalrecords.medicalrecords.rsp.DocumentDTO;
 import com.medicalrecords.medicalrecords.services.AmazonClientService;
 import com.medicalrecords.medicalrecords.services.DocumentationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,34 +46,39 @@ public class DocumentationControllerREST {
     }
 
     @GetMapping("/getDocuments/patients")
-    public List<DocumentDTO> getPatientDocuments( @RequestParam("patient") String patient ) {
-        DocumentDTO documentDTO = new DocumentDTO();
+    public List<DocumentDTO> getDocumentationByPatient( @RequestParam("patient") String patient ) {
+
         return documentationService.getAllDocuments(patient).stream()
-                                   .map(documentDTO::getDto)
+                                   .map(DocumentDTO::new)
                                    .collect(Collectors.toList());
 
     }
 
     @GetMapping("/getDocuments/doctors")
-    public List<DocumentDTO> getDoctorDocuments( @RequestParam("doctor") String doctor ) {
-        DocumentDTO documentDTO = new DocumentDTO();
+    public List<DocumentDTO> getDocumentationByDoctor( @RequestParam("doctor") String doctor ) {
         return documentationService.getDocumentsIssuedByDoctor(doctor).stream()
-                                   .map(documentDTO::getDto)
+                                   .map(DocumentDTO::new)
                                    .collect(Collectors.toList());
     }
 
     @GetMapping("/getDocuments/date")
-    public List<DocumentDTO> getDoctorDocuments( @RequestParam("from")
-                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                                                         LocalDate from,
-                                                 @RequestParam("to")
-                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                                                         LocalDate to ) {
-        DocumentDTO documentDTO = new DocumentDTO();
+    public List<DocumentDTO> getDocumentationByDate( @RequestParam("from")
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                             LocalDate from,
+                                                     @RequestParam("to")
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                             LocalDate to ) {
         return documentationService.getDocumentsByDate(from,to).stream()
-                                   .map(documentDTO::getDto)
+                                   .map(DocumentDTO::new)
                                    .collect(Collectors.toList());
-    }
+    }/*
+    @GetMapping("/getDocuments/tag")
+    public Set<DocumentDTO> getDocumentationByTag( @RequestParam("tag") String tag) {
+        DocumentDTO documentDTO = new DocumentDTO();
+        return documentationService.getDocumentsByTags(tag).stream()
+                                                      .map(documentDTO::getDto)
+                                                      .collect(Collectors.toSet());
+    }*/
 
     @GetMapping("/getDocuments/{docName}")
     public ResponseEntity<byte[]> getFile( @PathVariable String docName ) {
