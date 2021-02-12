@@ -22,13 +22,13 @@ public class UserControllerREST {
     }
 
     @PostMapping("/addDoctor")
-    public String addUser( @RequestBody final Doctor newDoctor ) {
+    public String addDoctor( @RequestBody final Doctor newDoctor ) {
         doctorService.save(newDoctor);
         return "Doctor has been successfully added!";
     }
 
     @PostMapping("/addPatient")
-    public String addUser( @RequestBody final Patient newPatient ) {
+    public String addPatient( @RequestBody final Patient newPatient ) {
         patientService.save(newPatient);
         return "Patient has been successfully added!";
     }

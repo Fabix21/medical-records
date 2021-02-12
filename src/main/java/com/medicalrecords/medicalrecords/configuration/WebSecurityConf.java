@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConf extends WebSecurityConfigurerAdapter {
@@ -20,12 +19,6 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     private final PatientService patientService;
     private final AdminConf adminConf;
 
-    /*
-        @Bean
-        public PasswordEncoder encoder() {
-            return new BCryptPasswordEncoder();
-        }
-    */
     @Autowired
     public WebSecurityConf( DoctorService doctorService,
                             PatientService patientService,
@@ -48,6 +41,8 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     protected void configure( HttpSecurity http ) throws Exception {
         http.httpBasic().and().csrf().disable().cors().disable().authorizeRequests()
             .antMatchers("/js/**","/css/**").permitAll()
+            .antMatchers("/addDoctor*").hasRole("ADM")
+            .antMatchers("/addPatient*").hasAnyRole("ADM", "DOC")
             .anyRequest().authenticated().and().formLogin().successHandler(customAuthenticationSuccessHandler);
         http.headers().frameOptions().sameOrigin();
     }
