@@ -27,7 +27,7 @@ public class DocumentationControllerREST {
 
     @Autowired
     public DocumentationControllerREST( final DocumentationService documentationService,
-                                        final TagService tagService,AmazonClientService amazonClientService ) {
+                                        final TagService tagService,AmazonClientService amazonClientService) {
         this.documentationService = documentationService;
         this.tagService = tagService;
         this.amazonClientService = amazonClientService;
@@ -78,7 +78,9 @@ public class DocumentationControllerREST {
     }
 
     @GetMapping("/getDocuments/tag")
-    public Set<DocumentDTO> getDocumentationByTag( @RequestParam("tag") String tag ) {
+    public Set<DocumentDTO> getDocumentationByTag( @RequestParam("tag") String tag) {
+
+
         return tagService.getDocumentsByTag(tag)
                          .stream()
                          .map(DocumentDTO::new)

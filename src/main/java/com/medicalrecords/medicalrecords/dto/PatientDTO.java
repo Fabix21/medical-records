@@ -14,11 +14,4 @@ public class PatientDTO {
     private final LocalDate dateOfBirth;
     private final String nfzID;
 
-    public PatientDTO( final Patient patient ) {
-        this.name = patient.getName().concat(" ").concat(patient.getSurname());
-        this.email = patient.getEmail();
-        this.pesel = patient.getPesel();
-        this.dateOfBirth = patient.getDateOfBirth();
-        this.nfzID = patient.getNfzID();
-    }
 }
