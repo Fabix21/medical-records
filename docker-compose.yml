@@ -1,5 +1,13 @@
 version: '3'
 services:
+
+  postgres:
+    image: postgres:alpine
+    ports:
+      - 5432:5432
+    env_file:
+      - dbconf-on-premise.env
+
   s3server:
     image: zenko/cloudserver
     restart: always
@@ -12,13 +20,15 @@ services:
       - ./config.json:/usr/src/app/config.json
 
   medical-documentation:
-    build: ./
+    build: ""
     volumes:
       - ./medical-records:/usr/src/app
     ports:
       - 8080:8080
     env_file:
-      - ./cloud-s3-db.env
+      - app-conf.env
+      - dbconf-on-premise.env
     depends_on:
       - s3server
+      - postgres
 
