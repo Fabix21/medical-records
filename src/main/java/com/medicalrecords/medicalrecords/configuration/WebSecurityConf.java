@@ -40,6 +40,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
     protected void configure( HttpSecurity http ) throws Exception {
         http.httpBasic().and().csrf().disable().cors().disable().authorizeRequests()
             .antMatchers("/js/**","/css/**").permitAll()
+            .antMatchers("/swagger-ui*").permitAll()
             .antMatchers("/addDoctor*").hasRole("ADM")
             .antMatchers("/addPatient*").hasAnyRole("ADM", "DOC")
             .anyRequest().authenticated().and().formLogin().successHandler(customAuthenticationSuccessHandler);
