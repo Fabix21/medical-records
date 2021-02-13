@@ -1,0 +1,11 @@
+version: '3'
+services:
+
+  medical-documentation:
+    image: fabix21/medical-records:latest
+    volumes:
+      - ./medical-records:/usr/src/app
+    ports:
+      - 80:8081
+    env_file:
+      - app-conf-prod.env.env

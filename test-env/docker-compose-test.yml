@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:alpine
     ports:
-      - 5432:5432
+      - 5432
     env_file:
       - dbconf-on-premise.env
 
@@ -12,19 +12,18 @@ services:
     image: zenko/cloudserver
     restart: always
     ports:
-      - 8000:8000
+      - 8000
     stdin_open: true
     tty: true
-    container_name: s3server
     volumes:
       - ./config.json:/usr/src/app/config.json
 
   medical-documentation:
-    build: ""
+    image: fabix21/medical-records:latest
     volumes:
       - ./medical-records:/usr/src/app
     ports:
-      - 8080:8080
+      - 8081:8080
     env_file:
       - app-conf.env
       - dbconf-on-premise.env
