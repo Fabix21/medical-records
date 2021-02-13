@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 
-
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final DoctorService doctorService;
     private final PatientService patientService;

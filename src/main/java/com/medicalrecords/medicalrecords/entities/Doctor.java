@@ -1,6 +1,7 @@
 package com.medicalrecords.medicalrecords.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.ElementCollection;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 @Entity
 public class Doctor extends User {
@@ -46,3 +48,5 @@ public class Doctor extends User {
     @ElementCollection
     private List<String> medSpecialization;
 }
+
+

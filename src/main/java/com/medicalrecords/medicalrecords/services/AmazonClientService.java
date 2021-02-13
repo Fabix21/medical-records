@@ -47,6 +47,8 @@ public class AmazonClientService {
         s3client.setEndpoint(endpoint);
         s3client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
         s3client.setS3ClientOptions(S3ClientOptions.builder().setPathStyleAccess(true).build());
+
+        s3client.createBucket(bucketName);
     }
 
     public String uploadFile( MultipartFile multipartFile ) throws IOException {
