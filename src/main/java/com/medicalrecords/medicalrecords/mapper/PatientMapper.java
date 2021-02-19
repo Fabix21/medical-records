@@ -1,4 +1,4 @@
-package com.medicalrecords.medicalrecords.controllers.mapper;
+package com.medicalrecords.medicalrecords.mapper;
 
 import com.medicalrecords.medicalrecords.dto.PatientDTO;
 import com.medicalrecords.medicalrecords.entities.Patient;

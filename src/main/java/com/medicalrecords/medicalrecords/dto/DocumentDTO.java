@@ -1,7 +1,7 @@
 package com.medicalrecords.medicalrecords.dto;
 
-import com.medicalrecords.medicalrecords.controllers.mapper.DoctorMapper;
-import com.medicalrecords.medicalrecords.controllers.mapper.PatientMapper;
+import com.medicalrecords.medicalrecords.mapper.DoctorMapper;
+import com.medicalrecords.medicalrecords.mapper.PatientMapper;
 import com.medicalrecords.medicalrecords.entities.Documentation;
 import com.medicalrecords.medicalrecords.entities.Tag;
 import lombok.Data;
