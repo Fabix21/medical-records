@@ -1,7 +1,11 @@
 package com.medicalrecords.medicalrecords.services;
 
+import com.medicalrecords.medicalrecords.dto.DoctorDTO;
+import com.medicalrecords.medicalrecords.dto.PatientDTO;
 import com.medicalrecords.medicalrecords.entities.Patient;
 import com.medicalrecords.medicalrecords.exceptions.UsernameTakenException;
+import com.medicalrecords.medicalrecords.mapper.DoctorMapper;
+import com.medicalrecords.medicalrecords.mapper.PatientMapper;
 import com.medicalrecords.medicalrecords.repositories.PatientRepository;
 import com.medicalrecords.medicalrecords.security.Role;
 import com.medicalrecords.medicalrecords.security.UserPrincipal;
@@ -15,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService extends UserService implements UserDetailsService {
@@ -41,6 +45,11 @@ public class PatientService extends UserService implements UserDetailsService {
         patientRepository.save(patient);
     }
 
+    @Cacheable(value = "getAllPatients")
+    public List<Patient> getAll() {
+        return patientRepository.findAll();
+    }
+
     public Patient getPatient( String patientName ) {
         return getUser(patientName,patientRepository);
     }
@@ -51,8 +60,20 @@ public class PatientService extends UserService implements UserDetailsService {
                                                     .orElseThrow(() -> new UsernameNotFoundException("Patient does not exist!")));
     }
 
-    @Cacheable(value = "getAllPatients")
-    public List<Patient> getAll() {
-        return patientRepository.findAll();
+    public PatientDTO getPatientDTOById( long id) {
+        return patientRepository.findById(id)
+                               .map(PatientMapper.MAPPER::patientToDto)
+                               .get();
+    }
+    public Patient getPatientById(long id){
+        return patientRepository.findById(id).get();
+    }
+
+    public List<PatientDTO> getAllPatients() {
+        return patientRepository.findAll()
+                                .stream()
+                                .map(PatientMapper.MAPPER::patientToDto)
+                                .collect(Collectors.toList());
     }
 }
+

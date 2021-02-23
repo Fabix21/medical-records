@@ -57,6 +57,28 @@ public class DocumentationService {
 
         documentationRepository.save(documentation);
     }
+    @CacheEvict(cacheNames = {"getAllDocuments","getAllDocuments","getDocumentsByDate"}, allEntries = true)
+    public void saveDocumentByIds( MultipartFile file,
+                              final long patID,
+                              final long docID,
+                              final Set<Tag> tags ) throws Exception {
+        final Patient patient = patientService.getPatientById(patID);
+        final Doctor doctor = doctorService.getDoctorById(docID);
+        final String fileName = amazonClientService.uploadFile(file);
+        final Documentation documentation = Documentation.builder()
+                                                         .patient(patient)
+                                                         .date(LocalDate.now())
+                                                         .doctor(doctor)
+                                                         .tags(tags)
+                                                         .documentName(file.getOriginalFilename())
+                                                         .s3path(fileName).build();
+        tags.forEach(tag -> {
+            tag.setDocumentations(new HashSet<>());
+            tag.getDocumentations().add(documentation);
+        });
+
+        documentationRepository.save(documentation);
+    }
 
     @Cacheable(value = "getAllDocuments")
     public List<Documentation> getAllDocuments( String login ) {
@@ -75,4 +97,13 @@ public class DocumentationService {
         return documentationRepository.findByDateBetween(from,to);
     }
 
+    public List<Documentation> getDocumentsByPatientId( long id ) {
+        final Patient patient = patientService.getPatientById(id);
+        return patient.getMedicalDocumentations();
+    }
+
+    public List<Documentation> getDocumentsByDoctorId( long id ) {
+        final Doctor doctor = doctorService.getDoctorById(id);
+        return doctor.getDocumentations();
+    }
 }
