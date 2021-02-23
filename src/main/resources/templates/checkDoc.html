@@ -67,7 +67,7 @@
             <!-- Gird column -->
             <div class="col-md-12">
 
-                <h5 class="my-4 dark-grey-text font-weight-bold">Pacjenci</h5>
+                <h5 class="my-4 dark-grey-text font-weight-bold">Dostępne dokumentacje</h5>
 
                 <div class="card">
                     <div class="card-body">
@@ -76,15 +76,15 @@
                             <tr>
                                 <th>Nazwa dokumentu</th>
                                 <th>Wystawiona przez</th>
-                                <th>Pobierz dokumentacje</th>
                                 <th>Data dodania</th>
+                                <th>Pobierz dokumentacje</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="documentation : ${documentations}">
                                 <td th:text="${documentation.documentName}"></td>
-                                <td th:text="${documentation.issuedBy}"></td>
-                                <td th:text="${documentation.timestamp}"></td>
+                                <td th:text="'Dr. ' + ${documentation.doctor.name} + ' ' + ${documentation.doctor.surname}"> </td>
+                                <td th:text="${documentation.date}"></td>
                                 <td><a class="btn btn-primary"
                                        th:href="@{/getDocuments/{id}(id=${documentation.s3path})}">Pobierz</a></td>
                             </tr>
